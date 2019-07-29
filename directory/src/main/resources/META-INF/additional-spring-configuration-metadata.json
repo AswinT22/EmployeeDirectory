@@ -1,0 +1,5 @@
+{"properties": [{
+  "name": "DirectoryService.ALL_UPDATED",
+  "type": "java.lang.String",
+  "description": "This holds messages for a successful update"
+}]}
