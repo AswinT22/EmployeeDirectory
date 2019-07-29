@@ -1,0 +1,197 @@
+
+
+
+
+VALID_DEPARTMENTS=IT, ADMIN, FINANCE, HR, CORE else 
+
+
+#GET
+http://localhost:3333/employeedirectory/directoryclient/restapi/employees
+
+returns All the employees
+
+#GET
+http://localhost:3333/employeedirectory/directoryclient/restapi/employees/department?Department=x
+
+return all the employees in that department
+
+
+#GET
+http://localhost:3333/employeedirectory/directoryclient/restapi/employees/{department}?Salary=x
+
+return all the employees in that department with a salary value greater than or equal to x
+
+
+#GET
+http://localhost:3333/employeedirectory/directoryclient/restapi/employees/{department}/search?Age=x
+
+return all the employees in that department with a age value greater than or equal to x
+
+#GET
+http://localhost:3333/employeedirectory/directoryclient/restapi/employees/{department}/search/{metric}?value=x
+
+
+
+VALID_METRICS=MONTH,YEAR,DATEOFBIRTH,GENDER,SALARY,NAME
+
+return all the employees in that department with metric
+
+
+department is not vaild metric here because the initial search department
+NAME like x
+SALARY > x
+GENDER equals x
+DATEOFBIRTH >=x
+YEAR(Age) >x
+MONTH(Age *12) >x
+
+
+The invalid get ResponseEntity<Object> contains Invalid Value Exxception with appropriate messages.
+The valid get ResponseEntity<Object> contains List of Employees with Success message.
+
+
+
+
+
+
+POST & PUT
+will not work without the header
+Content-Type:application/json
+
+
+#POST
+http://localhost:3333/employeedirectory/adminclient/admin.restapi/add
+
+return a Response Object which contains message and object of created/failed employee
+
+Failure scenarios (Refer  com.infosys.admin.directory.utility.EmployeeServiceUtil.validateEmployee(EmployeeDTO employee) for more details)
+If any attribute is missing or Null
+name string length should be >0 && <=80
+dateOfBirth if not a valid date format and if age from dob is less 18 or greaterThan 65
+gender string length should be >0 && <=10
+department string length should be >0 && <=7 && must be in [IT, ADMIN, FINANCE, HR, CORE ]
+salary must be > 0
+
+Accepts EmployeeModelObject in body
+
+body:
+
+{
+           
+ "name": "Adam",
+           
+"dateOfBirth": "15-07-1980",
+           
+ "gender": "Male",
+           
+ "salary": "60000",
+           
+ "department": "IT"}
+
+#POST
+http://localhost:3333/employeedirectory/adminclient/admin.restapi/addEmployees
+
+
+Accepts EmployeeModelArrayObject in body
+body:
+
+
+[
+
+ {"name": "Martin",
+ 
+"dateOfBirth": "09-02-1987",
+
+"gender": "MALE",
+  
+ "salary": "60000",
+ "department": "HR"},
+
+ {
+ "name": "Laila",
+ "dateOfBirth": "05-10-1992",
+"gender": "FEMALE",
+ "salary": "60000",
+"department": "CORE"}]
+
+THERE ARE THREE SCENARIOS
+
+AdminService.ALL_CREATED= All the employees have been created returns the list and count of created employees // All employees created - Success
+AdminService.PARTIAL_Success= Some of the creation have failed, please find the failed employee list and count //NotALL employees created -Partial Success 
+AdminService.FAILED= Employee Creation has failed returns the list and count of failed employees //No employees created - Failed
+
+Failure Scenarios are same as /add
+
+
+#PUT
+http://localhost:3333/employeedirectory/adminclient/admin.restapi/updateEmployees
+
+Accepts QueryModelObject in body
+
+body:
+
+{
+"queryMetric":"name",
+	
+"queryValue":"list",
+	 
+"changeMetric":"department",
+	
+"changeValue":"ADMIN"
+}
+
+
+return a Response Object which contains message and list of updated employee
+
+
+In case of invalid query return a Response Object invalid value exception and appropriate exception message
+
+Failure Scenarios
+ 
+date format must be"dd/MM/yyyy" 
+Age>18 
+Note: name,year,month cannot be a change metric
+query and change metric cannot be the same 
+VALID_METRICS=MONTH,YEAR,DATEOFBIRTH,GENDER,SALARY,DEPARTMENT,NAME
+
+
+
+
+#PUT
+http://localhost:3333/employeedirectory/adminclient/admin.restapi/updates
+
+
+
+Accepts QueryModelArrayObject in body
+
+body:
+[
+{
+"queryMetric":"name",
+	
+"queryValue":"test",
+	
+ "changeMetric":"dateofbirth",
+	
+"changeValue":"15/07/1906"
+},
+
+{
+"queryMetric":"name",
+	
+"queryValue":"list",
+	 
+"changeMetric":"dateofbirth",
+	
+"changeValue":"15/07/1906"
+}
+
+]
+
+
+
+THERE ARE THREE SCENARIOS
+
+AdminService.ALL_QUERY_UPDATED= The updates was successful,please find the list and count of queries //All updates are successful
+AdminService.PARTIAL_Success= Some of the updation have failed, please find the failed query list and count //NotALL updates are successful-Partial Success 
+AdminService.FAILED= Updation has failed returns the list and count of queries //No Update is successful - Failed
