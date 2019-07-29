@@ -1,0 +1,29 @@
+#Server configuration
+server:
+  port: ${PORT:${SERVER_PORT:0}}
+  servlet:
+    context-path: /adminclient
+    
+    
+#Profile configuration
+spring:
+  profiles:
+     active: dev
+
+---
+#Database configuration
+spring:
+  profiles: dev
+  datasource:
+    driverClassName: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost/employee_directory
+    username: root
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    
+    
+#DirectoryService:
+#  VALID_DEPARTMENTS:IT
